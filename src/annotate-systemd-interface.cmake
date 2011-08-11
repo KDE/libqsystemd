@@ -20,7 +20,7 @@
 
 set(DBUS_PREFIX /usr/share/dbus-1) # TODO: determine dynamically
 
-macro(libqsystemd_add_dbus_interface _sources  _infilepre _basename)
+macro(qsystemd_add_dbus_interface _sources  _infilepre _basename)
 	get_filename_component(_infile ${_infilepre} ABSOLUTE)
 	# add type annotations
 	get_filename_component(_FILENAME ${_infile} NAME)
@@ -47,4 +47,4 @@ macro(libqsystemd_add_dbus_interface _sources  _infilepre _basename)
 	qt4_generate_moc(${_HEADER} ${_MOC})
 	set(${_sources} ${${_sources}} ${_IMPL} ${_HEADER} ${_MOC})
 	macro_add_file_dependencies(${_IMPL} ${_MOC})
-endmacro(libqsystemd_add_dbus_interface)
+endmacro(qsystemd_add_dbus_interface)
