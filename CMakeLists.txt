@@ -8,7 +8,9 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}) # find generated interfaces
 
 set(libqsystemd_SRCS
 	dbus-interface-types.cpp
+	manager.cpp
 	main.cpp
+	unit.cpp
 )
 #libqsystemd_add_dbus_interface(libqsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Automount.xml systemd_automount_interface)
 #libqsystemd_add_dbus_interface(libqsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Device.xml    systemd_device_interface)
@@ -22,7 +24,7 @@ libqsystemd_add_dbus_interface(libqsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.fr
 #libqsystemd_add_dbus_interface(libqsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Swap.xml      systemd_swap_interface)
 #libqsystemd_add_dbus_interface(libqsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Target.xml    systemd_target_interface)
 #libqsystemd_add_dbus_interface(libqsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Timer.xml     systemd_timer_interface)
-#libqsystemd_add_dbus_interface(libqsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Unit.xml      systemd_unit_interface)
+libqsystemd_add_dbus_interface(libqsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Unit.xml      systemd_unit_interface)
 
 # TODO: library
 add_executable(libqsystemd ${libqsystemd_SRCS})

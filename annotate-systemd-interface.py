@@ -24,7 +24,8 @@ import sys, xml.dom.minidom as dom
 mappings = {
     # signature: (type annotation name, corresponding type)
     "a(usssoo)": ("com.trolltech.QtDBus.QtTypeName.Out0", "QList<QsdPrivate::JobListEntry>"),
-    "a(ssssssouso)": ("com.trolltech.QtDBus.QtTypeName.Out0", "QList<QsdPrivate::UnitListEntry>")
+    "a(ssssssouso)": ("com.trolltech.QtDBus.QtTypeName.Out0", "QList<QsdPrivate::UnitListEntry>"),
+    "(uo)": ("com.trolltech.QtDBus.QtTypeName", "QsdPrivate::JobSpec"),
 }
 
 # parse command line

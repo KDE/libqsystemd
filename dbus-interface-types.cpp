@@ -81,12 +81,33 @@ const QDBusArgument& operator>>(const QDBusArgument& arg, QsdPrivate::JobListEnt
 	return arg;
 }
 
+QDBusArgument& operator<<(QDBusArgument& arg, const QsdPrivate::JobSpec& js)
+{
+	arg.beginStructure();
+	arg << js.job_id;
+	arg << js.job_path;
+	arg.endStructure();
+	return arg;
+}
+
+const QDBusArgument& operator>>(const QDBusArgument& arg, QsdPrivate::JobSpec& js)
+{
+	arg.beginStructure();
+	arg >> js.job_id;
+	arg >> js.job_path;
+	arg.endStructure();
+	return arg;
+}
+
 void QsdPrivate::registerMetaTypes()
 {
 	qRegisterMetaType<QsdPrivate::UnitListEntry>("QsdPrivate::UnitListEntry");
 	qRegisterMetaType<QsdPrivate::JobListEntry>("QsdPrivate::JobListEntry");
+	qRegisterMetaType<QsdPrivate::JobSpec>("QsdPrivate::JobSpec");
 	qDBusRegisterMetaType<QsdPrivate::UnitListEntry>();
 	qDBusRegisterMetaType<QsdPrivate::JobListEntry>();
+	qDBusRegisterMetaType<QsdPrivate::JobSpec>();
+
 	qRegisterMetaType<QList<QsdPrivate::UnitListEntry> >("QList<QsdPrivate::UnitListEntry>");
 	qRegisterMetaType<QList<QsdPrivate::JobListEntry> >("QList<QsdPrivate::JobListEntry>");
 	qDBusRegisterMetaType<QList<QsdPrivate::UnitListEntry> >();

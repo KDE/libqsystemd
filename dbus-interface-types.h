@@ -49,6 +49,12 @@ struct JobListEntry
 	QDBusObjectPath unit_path;
 };
 
+struct JobSpec
+{
+	uint job_id;
+	QDBusObjectPath job_path;
+};
+
 void registerMetaTypes();
 
 } //namespace QsdPrivate
@@ -57,9 +63,12 @@ QDBusArgument& operator<<(QDBusArgument& arg, const QsdPrivate::UnitListEntry& u
 const QDBusArgument& operator>>(const QDBusArgument& arg, QsdPrivate::UnitListEntry& ue);
 QDBusArgument& operator<<(QDBusArgument& arg, const QsdPrivate::JobListEntry& je);
 const QDBusArgument& operator>>(const QDBusArgument& arg, QsdPrivate::JobListEntry& je);
+QDBusArgument& operator<<(QDBusArgument& arg, const QsdPrivate::JobSpec& js);
+const QDBusArgument& operator>>(const QDBusArgument& arg, QsdPrivate::JobSpec& js);
 
 Q_DECLARE_METATYPE(QsdPrivate::UnitListEntry)
 Q_DECLARE_METATYPE(QsdPrivate::JobListEntry)
+Q_DECLARE_METATYPE(QsdPrivate::JobSpec)
 Q_DECLARE_METATYPE(QList<QsdPrivate::UnitListEntry>)
 Q_DECLARE_METATYPE(QList<QsdPrivate::JobListEntry>)
 
