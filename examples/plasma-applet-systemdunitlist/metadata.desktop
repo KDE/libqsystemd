@@ -1,0 +1,21 @@
+[Desktop Entry]
+Name=systemd units
+Comment=Lists all available systemd units and their status
+Icon=utilities-system-monitor
+
+X-Plasma-API=declarativeappletscript
+X-Plasma-MainScript=ui/main.qml
+X-Plasma-DefaultSize=200,400
+
+X-KDE-PluginInfo-Author=Stefan Majewsky
+X-KDE-PluginInfo-Email=majewsky@gmx.net
+X-KDE-PluginInfo-Website=
+X-KDE-PluginInfo-Category=System
+X-KDE-PluginInfo-Name=org.kde.qsystemd.unitlist
+X-KDE-PluginInfo-Version=0.1
+
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-ServiceTypes=Plasma/Applet
+Type=Service
