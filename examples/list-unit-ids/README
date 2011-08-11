@@ -1,0 +1,2 @@
+This example is not built when qsystemd is built, because it demonstrates the
+CMake setup for an external application that uses qsystemd.
