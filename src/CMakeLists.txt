@@ -32,10 +32,10 @@ set_target_properties(qsystemd PROPERTIES
 
 #################### install ####################
 
-install(TARGETS qsystemd EXPORT QSystemdLibraryDepends DESTINATION lib${LIB_SUFFIX})
+install(TARGETS qsystemd EXPORT qsystemdLibraryDepends DESTINATION lib${LIB_SUFFIX})
+install(FILES libqsystemd_export.h DESTINATION include)
 
 install(FILES
-	libqsystemd_export.h
 	manager.h
 	unit.h
 DESTINATION include/qsystemd)
@@ -43,28 +43,28 @@ DESTINATION include/qsystemd)
 # the following adapted from http://www.vtk.org/Wiki/CMake/Tutorials/How_to_create_a_ProjectConfig.cmake_file
 
 # add all targets to the build-tree export set
-export(TARGETS qsystemd FILE ${PROJECT_BINARY_DIR}/QSystemdLibraryDepends.cmake)
+export(TARGETS qsystemd FILE ${PROJECT_BINARY_DIR}/qsystemdLibraryDepends.cmake)
 # export the package for use from the build tree (this registers the build-tree
 # with a global CMake registry)
-export(PACKAGE QSystemd)
+export(PACKAGE qsystemd)
 
-# create a QSystemdConfig.cmake file for use from the build tree
+# create a qsystemdConfig.cmake file for use from the build tree
 set(QSYSTEMD_INCLUDE_DIRS "${BUILD_TREE_INCLUDE_DIRS}")
 set(QSYSTEMD_LIB_DIR "${PROJECT_BINARY_DIR}/qsystemd")
 set(QSYSTEMD_CMAKE_DIR "${PROJECT_BINARY_DIR}")
-configure_file(QSystemdConfig.cmake.in "${PROJECT_BINARY_DIR}/QSystemdConfig.cmake" @ONLY)
-configure_file(QSystemdConfigVersion.cmake.in "${PROJECT_BINARY_DIR}/QSystemdConfigVersion.cmake" @ONLY)
+configure_file(qsystemdConfig.cmake.in "${PROJECT_BINARY_DIR}/qsystemdConfig.cmake" @ONLY)
+configure_file(qsystemdConfigVersion.cmake.in "${PROJECT_BINARY_DIR}/qsystemdConfigVersion.cmake" @ONLY)
 
 # install the export set for use with the installed tree
-install(EXPORT QSystemdLibraryDepends DESTINATION share/qsystemd/cmake COMPONENT devel)
+install(EXPORT qsystemdLibraryDepends DESTINATION share/qsystemd/cmake COMPONENT devel)
 
-# install a QSystemdConfig.cmake file for use from the installed tree
+# install a qsystemdConfig.cmake file for use from the installed tree
 set(QSYSTEMD_INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/include)
 set(QSYSTEMD_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
 set(QSYSTEMD_CMAKE_DIR ${CMAKE_INSTALL_PREFIX}/share/qsystemd/cmake)
-configure_file(QSystemdConfig.cmake.in "${PROJECT_BINARY_DIR}/InstallFiles/QSystemdConfig.cmake" @ONLY)
-configure_file(QSystemdConfigVersion.cmake.in "${PROJECT_BINARY_DIR}/InstallFiles/QSystemdConfigVersion.cmake" @ONLY)
+configure_file(qsystemdConfig.cmake.in "${PROJECT_BINARY_DIR}/InstallFiles/qsystemdConfig.cmake" @ONLY)
+configure_file(qsystemdConfigVersion.cmake.in "${PROJECT_BINARY_DIR}/InstallFiles/qsystemdConfigVersion.cmake" @ONLY)
 install(FILES
-	"${PROJECT_BINARY_DIR}/InstallFiles/QSystemdConfig.cmake"
-	"${PROJECT_BINARY_DIR}/InstallFiles/QSystemdConfigVersion.cmake"
+	"${PROJECT_BINARY_DIR}/InstallFiles/qsystemdConfig.cmake"
+	"${PROJECT_BINARY_DIR}/InstallFiles/qsystemdConfigVersion.cmake"
 DESTINATION ${QSYSTEMD_CMAKE_DIR})

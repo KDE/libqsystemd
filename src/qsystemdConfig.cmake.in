@@ -1,4 +1,4 @@
-# - Config file for the QSystemd package
+# - Config file for the qsystemd package
 
 # our own dependencies
 find_package(Qt4 COMPONENTS QtCore REQUIRED)
@@ -9,5 +9,5 @@ set(QSYSTEMD_INCLUDE_DIRS "@QSYSTEMD_INCLUDE_DIRS@")
 set(QSYSTEMD_LIBRARY_DIRS "@QSYSTEMD_LIB_DIR@")
 
 # our library dependencies (contains definitions for imported targets)
-include("@QSYSTEMD_CMAKE_DIR@/QSystemdLibraryDepends.cmake")
+include("@QSYSTEMD_CMAKE_DIR@/qsystemdLibraryDepends.cmake")
 set(QSYSTEMD_LIBRARIES qsystemd)

@@ -26,7 +26,7 @@
 class QsdUnit;
 
 /**
- * @class QsdManager manager.h <Qsystemd/QsdManager>
+ * @class QsdManager manager.h <qsystemd/QsdManager>
  *
  * This class represents the systemd process itself. It can be used to query
  * its state, issue commands not related to a certain unit or job, and list

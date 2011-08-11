@@ -86,7 +86,7 @@ namespace QsdLoadState
 }
 
 /**
- * @class QsdUnit unit.h <QSystemd/QsdUnit>
+ * @class QsdUnit unit.h <qsystemd/QsdUnit>
  *
  * This class represents a unit that is available in systemd. Instances are
  * created by QsdManager; any QsdUnit instance is guaranteed to correspond to
