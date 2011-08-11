@@ -11,3 +11,4 @@ find_package(Qt4 COMPONENTS QtCore QtDBus REQUIRED)
 include(${QT_USE_FILE})
 
 add_subdirectory(src)
+add_subdirectory(tools)
