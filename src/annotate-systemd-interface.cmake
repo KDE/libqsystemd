@@ -38,7 +38,7 @@ macro(qsystemd_add_dbus_interface _sources  _infilepre _basename)
 	set(_HEADER ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
 	set(_IMPL   ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
 	set(_MOC    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
-	set(_PARAMS -m -i ${CMAKE_CURRENT_SOURCE_DIR}/dbus-interface-types_p.h)
+	set(_PARAMS -m -i ${CMAKE_CURRENT_BINARY_DIR}/dbus-interface-types.h)
 	add_custom_command(OUTPUT ${_IMPL} ${_HEADER}
 		COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} ${_PARAMS} -p ${_basename} ${_OUTFILE}
 		DEPENDS ${_OUTFILE}

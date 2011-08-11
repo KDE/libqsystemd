@@ -2,8 +2,16 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/annotate-systemd-interface.cmake)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}) # find generated interfaces
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}) # for <libqsystemd_export.h>
 
+set(DIT_JSON ${CMAKE_CURRENT_SOURCE_DIR}/dbus-interface-types.json)
+set(DIT_BASE ${CMAKE_CURRENT_BINARY_DIR}/dbus-interface-types)
+add_custom_command(OUTPUT ${DIT_BASE}.h ${DIT_BASE}.cpp
+	COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/dbus-interface-types.py ${DIT_JSON} ${DIT_BASE}
+	MAIN_DEPENDENCY ${DIT_JSON}
+	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/dbus-interface-types.py
+)
+
 set(qsystemd_SRCS
-	dbus-interface-types.cpp
+	${DIT_BASE}.cpp
 	manager.cpp
 	unit.cpp
 )

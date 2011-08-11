@@ -22,7 +22,7 @@
 #include "dbusref_p.h"
 #include "unit.h"
 
-#include "dbus-interface-types_p.h"
+#include "dbus-interface-types.h"
 #include "systemd_unit_interface.h"
 
 namespace QsdPrivate
