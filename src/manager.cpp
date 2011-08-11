@@ -25,26 +25,26 @@
 
 struct QsdManager::Private
 {
-	Private();
+	Private(const QsdDBusRef& ref);
 
-	org::freedesktop::systemd1::Manager m_interface;
+	QsdFromDBusRef<org::freedesktop::systemd1::Manager> m_interface;
 	QList<QsdUnit*> m_units;
 };
 
-QsdManager::QsdManager()
-	: d(new Private)
+QsdManager::QsdManager(Private* d)
+	: d(d)
 {
 }
 
-QsdManager::Private::Private()
-	: m_interface("org.freedesktop.systemd1", "/org/freedesktop/systemd1", QDBusConnection::systemBus())
+QsdManager::Private::Private(const QsdDBusRef& ref)
+	: m_interface(ref)
 {
 	QsdPrivate::registerMetaTypes();
 	//list units
 	const QList<QsdPrivate::UnitListEntry> entries = m_interface.ListUnits();
 	foreach (const QsdPrivate::UnitListEntry& ule, entries)
 	{
-		m_units << new QsdUnit(new QsdUnit::Private(ule));
+		m_units << new QsdUnit(new QsdUnit::Private(ule, m_interface.ref()));
 	}
 }
 
@@ -55,8 +55,12 @@ QsdManager::~QsdManager()
 
 /*static*/ QsdManager* QsdManager::instance()
 {
-	//TODO: thread-safe QsdManager::instance
-	static QsdManager instance;
+	//TODO: thread-safe implementation
+	static QsdManager instance(new QsdManager::Private(QsdDBusRef(
+		QDBusConnection::systemBus(),
+		"org.freedesktop.systemd1",
+		"/org/freedesktop/systemd1"
+	)));
 	return &instance;
 }
 

@@ -66,8 +66,8 @@ QsdPrivate::ParsedUnitListEntry::ParsedUnitListEntry(const QsdPrivate::UnitListE
 {
 }
 
-QsdUnit::Private::Private(const QsdPrivate::UnitListEntry& ule)
-	: m_interface("org.freedesktop.systemd1", ule.unit_path.path(), QDBusConnection::systemBus())
+QsdUnit::Private::Private(const QsdPrivate::UnitListEntry& ule, const QsdDBusRef& siblingInterface)
+	: m_interface(siblingInterface.siblingPath(ule.unit_path))
 	, m_pule(new QsdPrivate::ParsedUnitListEntry(ule))
 {
 }

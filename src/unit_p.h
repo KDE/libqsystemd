@@ -19,6 +19,7 @@
 #ifndef LIBQSYSTEMD_UNIT_P_H
 #define LIBQSYSTEMD_UNIT_P_H
 
+#include "dbusref_p.h"
 #include "unit.h"
 
 #include "dbus-interface-types_p.h"
@@ -39,9 +40,9 @@ namespace QsdPrivate
 
 struct QsdUnit::Private
 {
-	Private(const QsdPrivate::UnitListEntry& ule);
+	Private(const QsdPrivate::UnitListEntry& ule, const QsdDBusRef& siblingInterface);
 
-	org::freedesktop::systemd1::Unit m_interface;
+	QsdFromDBusRef<org::freedesktop::systemd1::Unit> m_interface;
 	QsdPrivate::ParsedUnitListEntry* m_pule;
 };
 

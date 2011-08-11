@@ -37,7 +37,8 @@ class QsdUnit;
 class QSYSTEMD_EXPORT QsdManager : public QObject
 {
 	private:
-		QsdManager();
+		class Private;
+		QsdManager(Private* d);
 		~QsdManager();
 	public:
 		///@return the only QsdManager instance
@@ -48,7 +49,6 @@ class QSYSTEMD_EXPORT QsdManager : public QObject
 	Q_SIGNALS:
 		//TODO: unitAdded, unitRemoved
 	private:
-		class Private;
 		Private* const d;
 };
 
