@@ -23,6 +23,8 @@ class QsdManager;
 
 #include <QtCore/QStringList>
 
+#include <libqsystemd_export.h>
+
 namespace QsdUnitType
 {
 	/**
@@ -95,7 +97,7 @@ namespace QsdLoadState
  * is processed.
  */
 //TODO: QsdUnitRef class (weak reference to a unit by manager instance + id)
-class QsdUnit
+class QSYSTEMD_EXPORT QsdUnit
 {
 	private:
 		class Private;

@@ -16,7 +16,7 @@
  *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 ***************************************************************************/
 
-#include "dbus-interface-types.h"
+#include "dbus-interface-types_p.h"
 
 #include <QtDBus/QDBusArgument>
 #include <QtDBus/QDBusMetaType>

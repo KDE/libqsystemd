@@ -21,10 +21,12 @@
 
 #include <QtCore/QObject>
 
+#include <libqsystemd_export.h>
+
 class QsdUnit;
 
 /**
- * @class QsdManager manager.h <QSystemd/QsdManager>
+ * @class QsdManager manager.h <Qsystemd/QsdManager>
  *
  * This class represents the systemd process itself. It can be used to query
  * its state, issue commands not related to a certain unit or job, and list
@@ -32,7 +34,7 @@ class QsdUnit;
  *
  * All QsdUnit and QsdJob instances are created by this class.
  */
-class QsdManager : public QObject
+class QSYSTEMD_EXPORT QsdManager : public QObject
 {
 	private:
 		QsdManager();

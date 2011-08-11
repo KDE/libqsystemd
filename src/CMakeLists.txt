@@ -1,5 +1,6 @@
 include(${CMAKE_CURRENT_SOURCE_DIR}/annotate-systemd-interface.cmake)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}) # find generated interfaces
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}) # for <libqsystemd_export.h>
 
 set(qsystemd_SRCS
 	dbus-interface-types.cpp

@@ -20,7 +20,7 @@
 #include "unit.h"
 #include "unit_p.h"
 
-#include "dbus-interface-types.h"
+#include "dbus-interface-types_p.h"
 #include "systemd_manager_interface.h"
 
 struct QsdManager::Private

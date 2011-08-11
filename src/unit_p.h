@@ -21,7 +21,7 @@
 
 #include "unit.h"
 
-#include "dbus-interface-types.h"
+#include "dbus-interface-types_p.h"
 #include "systemd_unit_interface.h"
 
 namespace QsdPrivate
