@@ -16,58 +16,30 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include "manager.h"
+#ifndef LIBQSYSTEMD_DEVICE_H
+#define LIBQSYSTEMD_DEVICE_H
+
 #include "unit.h"
-#include "unit_p.h"
 
-#include "dbus-interface-types.h"
-#include "systemd_manager_interface.h"
+#include <libqsystemd_export.h>
 
-struct QsdManager::Private
+class QsdDevicePrivate;
+
+/**
+ * @class QsdDevice device.h <qsystemd/QsdDevice>
+ */
+class QSYSTEMD_EXPORT QsdDevice : public QsdUnit
 {
-	Private(const QsdPrivate::DBusRef& ref);
+	protected:
+		#auto QSDUNIT_SUBCLASS
+	private:
+		#auto GENERAL_UTILITIES
 
-	QsdFromDBusRef<org::freedesktop::systemd1::Manager> m_interface;
-	QList<QsdUnit*> m_units;
+		#auto INTERFACE_CLASS org::freedesktop::systemd1::Device
+		#auto INTERFACE_HEADER systemd_device_interface.h
+	public:
+		#auto RO_PROPERTY QString sysFSPath
+		#auto FETCH %.sysFSPath()
 };
 
-QsdManager::QsdManager(Private* d)
-	: d(d)
-{
-}
-
-QsdManager::Private::Private(const QsdPrivate::DBusRef& ref)
-	: m_interface(ref)
-{
-	QsdPrivate::registerMetaTypes();
-	//list units
-	const QList<QsdPrivate::UnitListEntry> entries = m_interface.ListUnits();
-	foreach (const QsdPrivate::UnitListEntry& ule, entries)
-	{
-		const QsdPrivate::DBusRef unitRef = ref.siblingPath(ule.unit_path);
-		QsdUnit* unit = QsdUnit::instantiate(ule.id, unitRef);
-		unit->d_ptr->populateWithUnitListEntry(ule);
-		m_units << unit;
-	}
-}
-
-QsdManager::~QsdManager()
-{
-	delete d;
-}
-
-/*static*/ QsdManager* QsdManager::instance()
-{
-	//TODO: thread-safe implementation
-	static QsdManager instance(new QsdManager::Private(QsdPrivate::DBusRef(
-		QDBusConnection::systemBus(),
-		"org.freedesktop.systemd1",
-		"/org/freedesktop/systemd1"
-	)));
-	return &instance;
-}
-
-QList<QsdUnit*> QsdManager::units() const
-{
-	return d->m_units;
-}
+#endif // LIBQSYSTEMD_DEVICE_H

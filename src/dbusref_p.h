@@ -23,45 +23,48 @@
 #include <QtDBus/QDBusObjectPath>
 
 // This struct contains the location of a DBus interface, that is: a triple of
-// bus connection, service name, and path. QsdDBusRef does *not* contain the
-// interface name, because that depends on the application.
+// bus connection, service name, and path. QsdPrivate::DBusRef does *not*
+// contain the interface name, because that depends on the application.
 //
 // Inside qsystemd, this struct is used to identify interfaces on the DBus.
 // The systemd API uses only QDBusObjectPath for that, because bus and service
 // name are always the same.
-struct QsdDBusRef
+namespace QsdPrivate
 {
-	QDBusConnection connection;
-	QString service, path;
-
-	QsdDBusRef(const QDBusConnection& connection, const QString& service, const QString& path)
-		: connection(connection), service(service), path(path)
-	{}
-
-	inline QsdDBusRef siblingPath(const QDBusObjectPath& newPath) const
+	struct DBusRef
 	{
-		return QsdDBusRef(connection, service, newPath.path());
-	}
-};
+		QDBusConnection connection;
+		QString service, path;
 
-// Instantiates an interface of the given type from the given QsdDBusRef.
-template<typename T> static inline T* qsdFromDBusRef(const QsdDBusRef& ref, QObject* parent = 0)
+		DBusRef(const QDBusConnection& connection, const QString& service, const QString& path)
+			: connection(connection), service(service), path(path)
+		{}
+
+		inline DBusRef siblingPath(const QDBusObjectPath& newPath) const
+		{
+			return DBusRef(connection, service, newPath.path());
+		}
+	};
+}
+
+// Instantiates an interface of the given type from the given QsdPrivate::DBusRef.
+template<typename T> static inline T* qsdFromDBusRef(const QsdPrivate::DBusRef& ref, QObject* parent = 0)
 {
 	return new T(ref.service, ref.path, ref.connection, parent);
 }
 
 // Mixin class for auto-generated QDBusInterface classes that provides a
-// QsdDBusRef-based constructor.
+// QsdPrivate::DBusRef-based constructor.
 template<typename T> class QsdFromDBusRef : public T
 {
 	public:
-		explicit inline QsdFromDBusRef(const QsdDBusRef& ref, QObject* parent = 0)
+		explicit inline QsdFromDBusRef(const QsdPrivate::DBusRef& ref, QObject* parent = 0)
 			: T(ref.service, ref.path, ref.connection, parent)
 		{}
 
-		inline QsdDBusRef ref() const
+		inline QsdPrivate::DBusRef ref() const
 		{
-			return QsdDBusRef(T::connection(), T::service(), T::path());
+			return QsdPrivate::DBusRef(T::connection(), T::service(), T::path());
 		}
 };
 

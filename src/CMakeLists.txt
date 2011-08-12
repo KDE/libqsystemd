@@ -12,11 +12,12 @@ qsystemd_process_json(qsystemd_SRCS
 	enumerations
 )
 qsystemd_process_source_file(qsystemd_SRCS
+	device
 	unit
 )
 
 #qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Automount.xml systemd_automount_interface)
-#qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Device.xml    systemd_device_interface)
+qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Device.xml    systemd_device_interface)
 #qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Job.xml       systemd_job_interface)
 qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Manager.xml   systemd_manager_interface)
 #qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Mount.xml     systemd_mount_interface)
@@ -44,9 +45,13 @@ install(TARGETS qsystemd EXPORT qsystemdLibraryDepends DESTINATION lib${LIB_SUFF
 install(FILES libqsystemd_export.h DESTINATION include)
 
 install(FILES
-	${CMAKE_CURRENT_BINARY_DIR}/enumerations.h
+	# actual header files
 	manager.h
-	unit.h
+	# output of qsystemd_process_json
+	${CMAKE_CURRENT_BINARY_DIR}/enumerations.h
+	# output of qsystemd_process_source_file
+	${CMAKE_CURRENT_BINARY_DIR}/device.h
+	${CMAKE_CURRENT_BINARY_DIR}/unit.h
 DESTINATION include/qsystemd)
 
 # the following adapted from http://www.vtk.org/Wiki/CMake/Tutorials/How_to_create_a_ProjectConfig.cmake_file

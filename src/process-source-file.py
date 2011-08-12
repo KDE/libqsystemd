@@ -33,6 +33,7 @@ interfaceClass = None
 interfaceHeader = None
 extraPrivateMembers = []
 roProperties = []
+isSubclass = False
 
 ################################################################################
 # parser commands for the header file
@@ -46,13 +47,19 @@ def parserCommand(name):
         return f
     return wrap
 
+@parserCommand("QSDUNIT_SUBCLASS")
+def pcSubclass(indent):
+    global isSubclass
+    isSubclass = True
+    hf.write(indent + "%s(%sPrivate* d_ptr);\n" % ((currentClass,)*2))
+
 @parserCommand("GENERAL_UTILITIES")
 def pcGeneralUtilities(indent):
-    hf.write(indent + "const QScopedPointer<%sPrivate> d_ptr;\n" % currentClass)
-    hf.write(indent + "Q_DECLARE_PRIVATE(%s)\n\n" % currentClass)
-    hf.write(indent + "%s(%sPrivate* d_ptr);\n" % ((currentClass,)*2))
-    hf.write(indent + "~%s();\n" % currentClass)
+    hf.write(indent + "Q_DECLARE_PRIVATE(%s)\n" % currentClass)
     hf.write(indent + "Q_DISABLE_COPY(%s)\n" % currentClass)
+    hf.write(indent + "friend class QsdManager;\n")          # may delete
+    hf.write(indent + "friend class QsdPrivate::Factory;\n") # may construct
+    hf.write(indent + "typedef %sPrivate Private;\n" % currentClass)
 
 @parserCommand("INTERFACE_CLASS")
 def pcInterfaceClass(indent, input):
@@ -107,7 +114,7 @@ def handleParserCommands(file, line):
     else:
         parseFunction(indent, input)
 
-classNameRegex = re.compile("^\\s*class\\s.*\\s(\\S+)\\s*\\{?")
+classNameRegex = re.compile("^\\s*class\\s.*QSYSTEMD_EXPORT\\s*(\\S+)")
 for line in open(inbasename + ".h.in").readlines():
     # read class name
     match = classNameRegex.match(line)
@@ -128,6 +135,8 @@ hf.write("\n")
 if interfaceClass is not None:
     hf.write("#include \"dbusref_p.h\"\n")
 hf.write("#include \"%s.h\"\n" % outbasename)
+if isSubclass:
+    hf.write("#include \"unit_p.h\"\n")
 hf.write("#include \"dbus-interface-types.h\"\n")
 if interfaceHeader is not None:
     hf.write("#include \"%s\"\n" % interfaceHeader)
@@ -135,12 +144,18 @@ hf.write("#include <QtCore/QMap>\n")
 hf.write("\n")
 
 # start to generate private class
-hf.write("struct %sPrivate {\n" % currentClass)
+if isSubclass:
+    hf.write("struct %sPrivate : public QsdUnitPrivate {\n" % currentClass)
+else:
+    hf.write("struct %sPrivate {\n" % currentClass)
 hf.write("\tmutable QMap<int, QVariant> m_data;\n")
 
 # DBus interface instance
 if interfaceClass is not None:
     hf.write("\tQsdFromDBusRef<%s> m_interface;\n" % interfaceClass)
+
+# generate ctor
+hf.write("\t%sPrivate(const QsdPrivate::DBusRef& ref);\n" % currentClass)
 
 # additional members as defined in the input file
 for member in extraPrivateMembers:
@@ -189,9 +204,19 @@ for line in open(inbasename + ".cpp.in").readlines():
     handleParserCommands(sf, line)
 sf.write("\n")
 
-# generate ctors/dtors
-sf.write("%s::%s(%sPrivate* d_ptr)\n\t: d_ptr(d_ptr)\n{\n}\n\n" % ((currentClass,)*3))
-sf.write("%s::~%s()\n{\n}\n\n" % ((currentClass,)*2))
+# generate private ctor
+sf.write("%sPrivate::%sPrivate(const QsdPrivate::DBusRef& ref)\n" % ((currentClass,)*2))
+if isSubclass:
+    sf.write("\t: QsdUnitPrivate(ref)\n\t, m_interface(ref)\n")
+else:
+    sf.write("\t: m_interface(ref)\n")
+sf.write("{\n}\n\n")
+
+# generate ctor for subclasses
+if isSubclass:
+    sf.write("%s::%s(%sPrivate* d_ptr)\n" % ((currentClass,)*3))
+    sf.write("\t: QsdUnit(d_ptr)\n")
+    sf.write("{\n}\n\n")
 
 # generate getter functions
 for pi, prop in enumerate(roProperties):
