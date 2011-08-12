@@ -1,6 +1,6 @@
 include(KDE4Defaults)
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
-include_directories(${KDE4_INCLUDES} ${PROJECT_SOURCE_DIR}/src)
+include_directories(${KDE4_INCLUDES})
 
 kde4_add_plugin(plasma_engine_systemd_units engine-units.cpp)
 target_link_libraries(plasma_engine_systemd_units ${KDE4_KDECORE_LIBS} ${KDE4_PLASMA_LIBS} qsystemd)

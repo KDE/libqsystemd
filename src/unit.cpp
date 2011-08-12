@@ -19,49 +19,16 @@
 #include "unit.h"
 #include "unit_p.h"
 
-QsdUnit::ActiveState activeStateFromString(const QString& str)
-{
-	static const QVector<QString> activeStateStrings = QVector<QString>()
-		<< QLatin1String("active") << QLatin1String("reloading")
-		<< QLatin1String("inactive") << QLatin1String("failed")
-		<< QLatin1String("activating") << QLatin1String("deactivating");
-	const int activeState = activeStateStrings.indexOf(str.toLower());
-	return static_cast<QsdUnit::ActiveState>(activeState);
-}
-
-QsdUnit::LoadState loadStateFromString(const QString& str)
-{
-	static const QVector<QString> loadStateStrings = QVector<QString>()
-		<< QLatin1String("stub") << QLatin1String("loaded")
-		<< QLatin1String("error") << QLatin1String("merged")
-		<< QLatin1String("masked");
-	const int loadState = loadStateStrings.indexOf(str.toLower());
-	return static_cast<QsdUnit::LoadState>(loadState);
-}
-
 static QsdUnit::Type typeFromUnitName(const QString& id)
 {
-	static const QVector<QString> typeSuffixes = QVector<QString>()
-		<< QLatin1String(".service") << QLatin1String(".socket")
-		<< QLatin1String(".target") << QLatin1String(".device")
-		<< QLatin1String(".mount") << QLatin1String(".automount")
-		<< QLatin1String(".snapshot") << QLatin1String(".timer")
-		<< QLatin1String(".swap") << QLatin1String(".path");
-	for (int i = 0; i < typeSuffixes.size(); ++i)
-	{
-		if (id.endsWith(typeSuffixes[i]))
-		{
-			return static_cast<QsdUnit::Type>(i);
-		}
-	}
-	return QsdUnitType::Invalid;
+	return QsdUnitType::fromString(id.section(QChar('.'), -1));
 }
 
 QsdPrivate::ParsedUnitListEntry::ParsedUnitListEntry(const QsdPrivate::UnitListEntry& ule)
 	: id(ule.id)
 	, description(ule.description)
-	, activeState(activeStateFromString(ule.active_state))
-	, loadState(loadStateFromString(ule.load_state))
+	, activeState(QsdActiveState::fromString(ule.active_state))
+	, loadState(QsdLoadState::fromString(ule.load_state))
 	, type(typeFromUnitName(ule.id))
 {
 }
@@ -116,7 +83,7 @@ QsdUnit::ActiveState QsdUnit::activeState() const
 	{
 		return d->m_pule->activeState;
 	}
-	return activeStateFromString(d->m_interface.activeState());
+	return QsdActiveState::fromString(d->m_interface.activeState());
 }
 
 QsdUnit::LoadState QsdUnit::loadState() const
@@ -125,5 +92,5 @@ QsdUnit::LoadState QsdUnit::loadState() const
 	{
 		return d->m_pule->loadState;
 	}
-	return loadStateFromString(d->m_interface.loadState());
+	return QsdLoadState::fromString(d->m_interface.loadState());
 }

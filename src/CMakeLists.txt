@@ -1,20 +1,17 @@
 include(${CMAKE_CURRENT_SOURCE_DIR}/annotate-systemd-interface.cmake)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}) # find generated interfaces
+include(${CMAKE_CURRENT_SOURCE_DIR}/process-json.cmake)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}) # find generated headers
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}) # for <libqsystemd_export.h>
 
-set(DIT_JSON ${CMAKE_CURRENT_SOURCE_DIR}/dbus-interface-types.json)
-set(DIT_BASE ${CMAKE_CURRENT_BINARY_DIR}/dbus-interface-types)
-add_custom_command(OUTPUT ${DIT_BASE}.h ${DIT_BASE}.cpp
-	COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/dbus-interface-types.py ${DIT_JSON} ${DIT_BASE}
-	MAIN_DEPENDENCY ${DIT_JSON}
-	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/dbus-interface-types.py
-)
-
 set(qsystemd_SRCS
-	${DIT_BASE}.cpp
 	manager.cpp
 	unit.cpp
 )
+qsystemd_process_json(qsystemd_SRCS
+	dbus-interface-types
+	enumerations
+)
+
 #qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Automount.xml systemd_automount_interface)
 #qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Device.xml    systemd_device_interface)
 #qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Job.xml       systemd_job_interface)
@@ -44,6 +41,7 @@ install(TARGETS qsystemd EXPORT qsystemdLibraryDepends DESTINATION lib${LIB_SUFF
 install(FILES libqsystemd_export.h DESTINATION include)
 
 install(FILES
+	${CMAKE_CURRENT_BINARY_DIR}/enumerations.h
 	manager.h
 	unit.h
 DESTINATION include/qsystemd)

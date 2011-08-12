@@ -19,71 +19,10 @@
 #ifndef LIBQSYSTEMD_UNIT_H
 #define LIBQSYSTEMD_UNIT_H
 
+#include "enumerations.h"
 class QsdManager;
 
-#include <QtCore/QStringList>
-
 #include <libqsystemd_export.h>
-
-namespace QsdUnitType
-{
-	/**
-	 * @enum QsdUnitType::UnitType
-	 *
-	 * The recommended typedef for this enum is QsdUnit::Type.
-	 */
-	enum UnitType
-	{
-		Service,
-		Socket,
-		Target,
-		Device,
-		Mount,
-		Automount,
-		Snapshot,
-		Timer,
-		Swap,
-		Path,
-		Invalid = -1
-	};
-}
-
-namespace QsdActiveState
-{
-	/**
-	 * @enum QsdActiveState::ActiveState
-	 *
-	 * The recommended typedef for this enum is QsdUnit::ActiveState.
-	 */
-	enum ActiveState
-	{
-		Active,
-		Reloading,
-		Inactive,
-		Failed,
-		Activating,
-		Deactivating,
-		Invalid = -1
-	};
-}
-
-namespace QsdLoadState
-{
-	/**
-	 * @enum QsdLoadState::LoadState
-	 *
-	 * The recommended typedef for this enum is QsdUnit::LoadState.
-	 */
-	enum LoadState
-	{
-		Stub,
-		Loaded,
-		Error,
-		Merged,
-		Masked,
-		Invalid = -1
-	};
-}
 
 /**
  * @class QsdUnit unit.h <qsystemd/QsdUnit>
