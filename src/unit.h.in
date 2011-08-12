@@ -62,10 +62,8 @@ class QSYSTEMD_EXPORT QsdUnit
 
 		///@return the identifier of this unit
 		#auto RO_PROPERTY QString id
-		#auto FETCH %.id()
 		///@return a mostly human-readable description of this unit
 		#auto RO_PROPERTY QString description
-		#auto FETCH %.description()
 
 		//TODO: map UnitListEntry::{following,job_id,job_type,sub_state}
 

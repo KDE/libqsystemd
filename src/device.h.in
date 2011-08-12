@@ -39,7 +39,6 @@ class QSYSTEMD_EXPORT QsdDevice : public QsdUnit
 		#auto INTERFACE_HEADER systemd_device_interface.h
 	public:
 		#auto RO_PROPERTY QString sysFSPath
-		#auto FETCH %.sysFSPath()
 };
 
 #endif // LIBQSYSTEMD_DEVICE_H

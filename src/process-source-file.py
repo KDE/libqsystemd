@@ -80,8 +80,9 @@ def pcExtraPrivateMember(indent, input):
 def pcROProperty(indent, input):
     typeName, name = input.split(" ")
     hf.write(indent + "%s %s() const;\n" % (typeName, name))
+    defaultFetch = "%%.%s()" % name
     global roProperties
-    roProperties.append(dict(typeName=typeName, name=name))
+    roProperties.append(dict(typeName=typeName, name=name, fetch=defaultFetch))
 
 @parserCommand("FETCH")
 def pcFetch(indent, input):
@@ -200,9 +201,10 @@ sf.write("#include \"%s.h\"\n" % outbasename)
 sf.write("#include \"%s_p.h\"\n\n" % outbasename)
 
 # stream .cpp.in into .cpp, handle source file parser commands
-for line in open(inbasename + ".cpp.in").readlines():
-    handleParserCommands(sf, line)
-sf.write("\n")
+if os.path.exists(inbasename + ".cpp.in"):
+    for line in open(inbasename + ".cpp.in").readlines():
+        handleParserCommands(sf, line)
+    sf.write("\n")
 
 # generate private ctor
 sf.write("%sPrivate::%sPrivate(const QsdPrivate::DBusRef& ref)\n" % ((currentClass,)*2))
@@ -228,14 +230,14 @@ for pi, prop in enumerate(roProperties):
     # try to find value in map (by iterator, to avoid double lookup through
     # a pair of contains()/value() calls)
     sf.write("\tQMap<int, QVariant>::const_iterator it = d->m_data.constFind(%i);\n" % pi)
-    sf.write("\tif (it != d->m_data.constEnd())\n")
+    sf.write("\tif (it != d->%sPrivate::m_data.constEnd())\n" % currentClass)
     sf.write("\t\treturn it.value().value<%s >();\n" % tn)
     # use the fetch command to retrieve the value from the DBus interface
     # the magic character "%" is replaced by d->m_interface
     fc = fc.replace("%", "d->%sPrivate::m_interface" % (currentClass))
     sf.write("\tconst %s val = %s;\n" % (tn, fc))
     # store in data cache for next access
-    sf.write("\td->m_data.insert(%i, QVariant::fromValue<%s >(val));\n" % (pi, tn))
+    sf.write("\td->%sPrivate::m_data.insert(%i, QVariant::fromValue<%s >(val));\n" % (currentClass, pi, tn))
     sf.write("\treturn val;\n")
     # end function
     sf.write("}\n\n")
