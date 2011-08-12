@@ -23,9 +23,13 @@ macro(qsystemd_process_source_file _srcvar)
 	foreach(_basename ${ARGN})
 		set(IN_BASE ${CMAKE_CURRENT_SOURCE_DIR}/${_basename})
 		set(OUT_BASE ${CMAKE_CURRENT_BINARY_DIR}/${_basename})
+		set(DEPENDS ${PY_FILE})
+		if(EXISTS ${IN_BASE}.cpp.in)
+			set(DEPENDS ${IN_BASE}.cpp.in ${DEPENDS})
+		endif(EXISTS ${IN_BASE}.cpp.in)
 		add_custom_command(OUTPUT ${OUT_BASE}.h ${OUT_BASE}_p.h ${OUT_BASE}.cpp
 			COMMAND ${PY_FILE} ${IN_BASE} ${OUT_BASE}
-			MAIN_DEPENDENCY ${IN_BASE}.h.in DEPENDS ${IN_BASE}.cpp.in ${PY_FILE}
+			MAIN_DEPENDENCY ${IN_BASE}.h.in DEPENDS ${DEPENDS}
 			COMMENT "Processing ${_basename}.{h,cpp}.in"
 		)
 		set (${_srcvar} ${${_srcvar}} "${OUT_BASE}.cpp")
