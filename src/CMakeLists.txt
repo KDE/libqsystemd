@@ -11,11 +11,6 @@ qsystemd_process_json(qsystemd_SRCS
 	dbus-interface-types
 	enumerations
 )
-qsystemd_process_source_file(qsystemd_SRCS
-	device
-	target
-	unit
-)
 
 #qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Automount.xml systemd_automount_interface)
 qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Device.xml    systemd_device_interface)
@@ -30,6 +25,10 @@ qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesk
 qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Target.xml    systemd_target_interface)
 #qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Timer.xml     systemd_timer_interface)
 qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Unit.xml      systemd_unit_interface)
+
+qsystemd_process_source_file(qsystemd_SRCS device    systemd_device_interface)
+qsystemd_process_source_file(qsystemd_SRCS target    systemd_target_interface)
+qsystemd_process_source_file(qsystemd_SRCS unit      systemd_unit_interface)
 
 add_library(qsystemd SHARED ${qsystemd_SRCS})
 target_link_libraries(qsystemd ${QT_LIBRARIES})
