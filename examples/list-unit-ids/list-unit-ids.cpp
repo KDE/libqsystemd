@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <QtCore/QStringList>
 #include <QtCore/QTextStream>
 #include <qsystemd/manager.h>
 #include <qsystemd/unit.h>
