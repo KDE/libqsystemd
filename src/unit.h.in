@@ -60,22 +60,19 @@ class QSYSTEMD_EXPORT QsdUnit
 		typedef QsdActiveState::ActiveState ActiveState;
 		typedef QsdLoadState::LoadState LoadState;
 
-		///@return the identifier of this unit
-		#auto RO_PROPERTY QString id
-		///@return a mostly human-readable description of this unit
-		#auto RO_PROPERTY QString description
-
-		//TODO: map UnitListEntry::{following,job_id,job_type,sub_state}
-
-		///@return the type of unit
+		//These properties need special handling because they return enums.
 		#auto RO_PROPERTY QsdUnit::Type type
 		#auto FETCH typeFromUnitName(%.id())
-		///@return the active_state of this unit
 		#auto RO_PROPERTY QsdUnit::ActiveState activeState
 		#auto FETCH QsdActiveState::fromString(%.activeState())
-		///@return the load_state of this unit
 		#auto RO_PROPERTY QsdUnit::LoadState loadState
 		#auto FETCH QsdLoadState::fromString(%.loadState())
+
+		//TODO: handle job property (when there's a QsdJob class)
+		//TODO: properties listing units should have a "Units" suffix
+		//      e.g. before -> beforeUnits
+		//TODO: decide on handling of subState (enums per subclass?)
+		#auto RO_PROPERTIES_FROM_INTERFACE_EXCEPT job
 };
 
 #endif // LIBQSYSTEMD_UNIT_H
