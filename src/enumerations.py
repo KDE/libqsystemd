@@ -41,6 +41,7 @@ au.autogenWarning(hf, infilename)
 au.beginIncludeGuard(hf, outbasename + ".h")
 
 # includes
+hf.write("#include <QtCore/QMetaType>\n")
 hf.write("#include <QtCore/QString>\n\n")
 
 # foreach enumeration...
@@ -61,6 +62,11 @@ for enum in json_def:
         hf.write("\tQString toString(%s::%s);\n" % (ns, tn))
     # end namespace
     hf.write("}\n\n")
+
+# declare metatype for usage with QVariant (see e.g. unit.{h,cpp}.in)
+for enum in json_def:
+    ns, tn, _, _, _ = readEnumDef(enum)
+    hf.write("Q_DECLARE_METATYPE(%s::%s)\n" % (ns, tn))
 
 # close file
 hf.write("#endif\n")

@@ -39,31 +39,36 @@ class QsdManager;
 class QSYSTEMD_EXPORT QsdUnit
 {
 	private:
-		class Private;
-		friend class QsdManager;
+		#auto LIFETIME_MANAGEMENT
 
-		QsdUnit(Private* d);
-		~QsdUnit();
-		Q_DISABLE_COPY(QsdUnit)
+		#auto INTERFACE_CLASS org::freedesktop::systemd1::Unit
+		#auto INTERFACE_HEADER systemd_unit_interface.h
+
+		friend class QsdManager;
+		#auto EXTRA_PRIVATE_MEMBER Private(const QsdPrivate::UnitListEntry& ule, const QsdDBusRef& siblingInterface);
 	public:
 		typedef QsdUnitType::UnitType Type;
 		typedef QsdActiveState::ActiveState ActiveState;
 		typedef QsdLoadState::LoadState LoadState;
 
 		///@return the identifier of this unit
-		QString id() const;
+		#auto RO_PROPERTY QString id
+		#auto FETCH %.id()
 		///@return a mostly human-readable description of this unit
-		QString description() const;
+		#auto RO_PROPERTY QString description
+		#auto FETCH %.description()
+
 		//TODO: map UnitListEntry::{following,job_id,job_type,sub_state}
 
 		///@return the type of unit
-		QsdUnit::Type type() const;
+		#auto RO_PROPERTY QsdUnit::Type type
+		#auto FETCH typeFromUnitName(%.id())
 		///@return the active_state of this unit
-		QsdUnit::ActiveState activeState() const;
+		#auto RO_PROPERTY QsdUnit::ActiveState activeState
+		#auto FETCH QsdActiveState::fromString(%.activeState())
 		///@return the load_state of this unit
-		QsdUnit::LoadState loadState() const;
-	private:
-		Private* const d;
+		#auto RO_PROPERTY QsdUnit::LoadState loadState
+		#auto FETCH QsdLoadState::fromString(%.loadState())
 };
 
 #endif // LIBQSYSTEMD_UNIT_H

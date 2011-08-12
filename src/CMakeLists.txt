@@ -1,15 +1,18 @@
 include(${CMAKE_CURRENT_SOURCE_DIR}/annotate-systemd-interface.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/process-json.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/process-source-file.cmake)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}) # find generated headers
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}) # for <libqsystemd_export.h>
 
 set(qsystemd_SRCS
 	manager.cpp
-	unit.cpp
 )
 qsystemd_process_json(qsystemd_SRCS
 	dbus-interface-types
 	enumerations
+)
+qsystemd_process_source_file(qsystemd_SRCS
+	unit
 )
 
 #qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Automount.xml systemd_automount_interface)
