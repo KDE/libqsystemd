@@ -30,15 +30,13 @@ class QsdDevicePrivate;
  */
 class QSYSTEMD_EXPORT QsdDevice : public QsdUnit
 {
+	#auto INTERFACE_CLASS org::freedesktop::systemd1::Device
+	#auto INTERFACE_HEADER systemd_device_interface.h
+	#auto GENERAL_UTILITIES
 	protected:
 		#auto QSDUNIT_SUBCLASS
-	private:
-		#auto GENERAL_UTILITIES
-
-		#auto INTERFACE_CLASS org::freedesktop::systemd1::Device
-		#auto INTERFACE_HEADER systemd_device_interface.h
 	public:
-		#auto RO_PROPERTY QString sysFSPath
+		#auto RO_PROPERTIES_FROM_INTERFACE
 };
 
 #endif // LIBQSYSTEMD_DEVICE_H

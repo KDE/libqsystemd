@@ -33,6 +33,7 @@ interfaceClass = None
 interfaceHeader = None
 extraPrivateMembers = []
 roProperties = []
+propertyNames = []
 isSubclass = False
 
 ################################################################################
@@ -83,11 +84,26 @@ def pcROProperty(indent, input):
     defaultFetch = "%%.%s()" % name
     global roProperties
     roProperties.append(dict(typeName=typeName, name=name, fetch=defaultFetch))
+    global propertyNames
+    propertyNames.append(name)
 
 @parserCommand("FETCH")
 def pcFetch(indent, input):
     global roProperties
     roProperties[len(roProperties) - 1]["fetch"] = input
+
+@parserCommand("RO_PROPERTIES_FROM_INTERFACE")
+def pcROPropertiesFromInterface(indent):
+    # collect all readonly Q_PROPERTIES from the given file in the binary dir
+    qpropertyRegex = re.compile("Q_PROPERTY\\((\\S*) \\w* READ (\\w*)\\)")
+    binaryDir = os.path.dirname(outbasename)
+    for line in open(os.path.join(binaryDir, interfaceHeader)).readlines():
+        match = qpropertyRegex.search(line)
+        if match:
+            typeName, propName = match.group(1), match.group(2)
+            # use pcROProperty to autogenerate unknown properties
+            if not propName in propertyNames:
+                pcROProperty(indent, " ".join((typeName, propName)))
 
 ################################################################################
 # process public header file
