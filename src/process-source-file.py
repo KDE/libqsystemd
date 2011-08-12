@@ -94,6 +94,11 @@ def pcFetch(indent, input):
 
 @parserCommand("RO_PROPERTIES_FROM_INTERFACE")
 def pcROPropertiesFromInterface(indent):
+    pcROPropertiesFromInterfaceExcept(indent, "")
+
+@parserCommand("RO_PROPERTIES_FROM_INTERFACE_EXCEPT")
+def pcROPropertiesFromInterfaceExcept(indent, input):
+    exceptProps = input.split(" ")
     # collect all readonly Q_PROPERTIES from the given file in the binary dir
     qpropertyRegex = re.compile("Q_PROPERTY\\((\\S*) \\w* READ (\\w*)\\)")
     binaryDir = os.path.dirname(outbasename)
@@ -102,7 +107,7 @@ def pcROPropertiesFromInterface(indent):
         if match:
             typeName, propName = match.group(1), match.group(2)
             # use pcROProperty to autogenerate unknown properties
-            if not propName in propertyNames:
+            if not propName in propertyNames and not propName in exceptProps:
                 pcROProperty(indent, " ".join((typeName, propName)))
 
 ################################################################################

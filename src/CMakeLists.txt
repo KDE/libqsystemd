@@ -12,7 +12,7 @@ qsystemd_process_json(qsystemd_SRCS
 	enumerations
 )
 
-#qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Automount.xml systemd_automount_interface)
+qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Automount.xml systemd_automount_interface)
 qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Device.xml    systemd_device_interface)
 #qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Job.xml       systemd_job_interface)
 qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Manager.xml   systemd_manager_interface)
@@ -26,6 +26,7 @@ qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesk
 #qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Timer.xml     systemd_timer_interface)
 qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesktop.systemd1.Unit.xml      systemd_unit_interface)
 
+qsystemd_process_source_file(qsystemd_SRCS automount systemd_automount_interface)
 qsystemd_process_source_file(qsystemd_SRCS device    systemd_device_interface)
 qsystemd_process_source_file(qsystemd_SRCS target    systemd_target_interface)
 qsystemd_process_source_file(qsystemd_SRCS unit      systemd_unit_interface)
@@ -50,7 +51,9 @@ install(FILES
 	# output of qsystemd_process_json
 	${CMAKE_CURRENT_BINARY_DIR}/enumerations.h
 	# output of qsystemd_process_source_file
+	${CMAKE_CURRENT_BINARY_DIR}/automount.h
 	${CMAKE_CURRENT_BINARY_DIR}/device.h
+	${CMAKE_CURRENT_BINARY_DIR}/target.h
 	${CMAKE_CURRENT_BINARY_DIR}/unit.h
 DESTINATION include/qsystemd)
 
