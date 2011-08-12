@@ -24,6 +24,8 @@ class QsdManager;
 
 #include <libqsystemd_export.h>
 
+class QsdUnitPrivate;
+
 /**
  * @class QsdUnit unit.h <qsystemd/QsdUnit>
  *
@@ -39,13 +41,13 @@ class QsdManager;
 class QSYSTEMD_EXPORT QsdUnit
 {
 	private:
-		#auto LIFETIME_MANAGEMENT
+		#auto GENERAL_UTILITIES
 
 		#auto INTERFACE_CLASS org::freedesktop::systemd1::Unit
 		#auto INTERFACE_HEADER systemd_unit_interface.h
 
 		friend class QsdManager;
-		#auto EXTRA_PRIVATE_MEMBER Private(const QsdPrivate::UnitListEntry& ule, const QsdDBusRef& siblingInterface);
+		#auto EXTRA_PRIVATE_MEMBER QsdUnitPrivate(const QsdPrivate::UnitListEntry& ule, const QsdDBusRef& siblingInterface);
 	public:
 		typedef QsdUnitType::UnitType Type;
 		typedef QsdActiveState::ActiveState ActiveState;

@@ -28,7 +28,6 @@ if len(sys.argv) != 3:
 inbasename, outbasename = [os.path.abspath(x) for x in sys.argv[1:]]
 
 # setup data fields
-generateLifetimeManagementFunctions = False
 currentClass = None
 interfaceClass = None
 interfaceHeader = None
@@ -47,15 +46,13 @@ def parserCommand(name):
         return f
     return wrap
 
-@parserCommand("LIFETIME_MANAGEMENT")
-def pcLifetimeManagement(indent):
-    hf.write(indent + "class Private;\n")
-    hf.write(indent + "Private* const d;\n")
-    hf.write(indent + "%s(Private* d);\n" % currentClass)
+@parserCommand("GENERAL_UTILITIES")
+def pcGeneralUtilities(indent):
+    hf.write(indent + "const QScopedPointer<%sPrivate> d_ptr;\n" % currentClass)
+    hf.write(indent + "Q_DECLARE_PRIVATE(%s)\n\n" % currentClass)
+    hf.write(indent + "%s(%sPrivate* d_ptr);\n" % ((currentClass,)*2))
     hf.write(indent + "~%s();\n" % currentClass)
     hf.write(indent + "Q_DISABLE_COPY(%s)\n" % currentClass)
-    global generateLifetimeManagementFunctions
-    generateLifetimeManagementFunctions = True
 
 @parserCommand("INTERFACE_CLASS")
 def pcInterfaceClass(indent, input):
@@ -138,8 +135,8 @@ hf.write("#include <QtCore/QMap>\n")
 hf.write("\n")
 
 # start to generate private class
-hf.write("struct %s::Private {\n" % currentClass)
-hf.write("\tQMap<int, QVariant> m_data;\n")
+hf.write("struct %sPrivate {\n" % currentClass)
+hf.write("\tmutable QMap<int, QVariant> m_data;\n")
 
 # DBus interface instance
 if interfaceClass is not None:
@@ -174,6 +171,8 @@ def pcStore(indent, input):
     def w(x): sf.write(indent + x)
     w("{\n")
     w("\tconst %s val = %s;\n" % (tn, expr))
+    # NOTE: no Q_D macro here; the method containing the STORE command is
+    #       supposed to do that
     w("\td->m_data.insert(%i, QVariant::fromValue<%s >(val));\n" % (pi, tn))
     w("}\n")
 
@@ -191,9 +190,8 @@ for line in open(inbasename + ".cpp.in").readlines():
 sf.write("\n")
 
 # generate ctors/dtors
-if generateLifetimeManagementFunctions:
-    sf.write("%s::%s(%s::Private* d)\n\t: d(d)\n{\n}\n\n" % ((currentClass,)*3))
-    sf.write("%s::~%s()\n{\n\tdelete d;\n}\n\n" % ((currentClass,)*2))
+sf.write("%s::%s(%sPrivate* d_ptr)\n\t: d_ptr(d_ptr)\n{\n}\n\n" % ((currentClass,)*3))
+sf.write("%s::~%s()\n{\n}\n\n" % ((currentClass,)*2))
 
 # generate getter functions
 for pi, prop in enumerate(roProperties):
@@ -201,6 +199,7 @@ for pi, prop in enumerate(roProperties):
     tn, pn, fc = prop["typeName"], prop["name"], prop["fetch"]
     # begin function
     sf.write("%s %s::%s() const\n{\n" % (tn, currentClass, pn))
+    sf.write("\tQ_D(const %s);\n" % currentClass)
     # try to find value in map (by iterator, to avoid double lookup through
     # a pair of contains()/value() calls)
     sf.write("\tQMap<int, QVariant>::const_iterator it = d->m_data.constFind(%i);\n" % pi)
@@ -208,7 +207,7 @@ for pi, prop in enumerate(roProperties):
     sf.write("\t\treturn it.value().value<%s >();\n" % tn)
     # use the fetch command to retrieve the value from the DBus interface
     # the magic character "%" is replaced by d->m_interface
-    fc = fc.replace("%", "d->m_interface")
+    fc = fc.replace("%", "d->%sPrivate::m_interface" % (currentClass))
     sf.write("\tconst %s val = %s;\n" % (tn, fc))
     # store in data cache for next access
     sf.write("\td->m_data.insert(%i, QVariant::fromValue<%s >(val));\n" % (pi, tn))
