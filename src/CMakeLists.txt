@@ -1,6 +1,6 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/annotate-systemd-interface.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/process-json.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/process-source-file.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/annotate-systemd-interface.cmake) # macro qsystemd_add_dbus_interface
+include(${CMAKE_CURRENT_SOURCE_DIR}/process-json.cmake)               # macro qsystemd_process_json
+include(${CMAKE_CURRENT_SOURCE_DIR}/process-source-file.cmake)        # macro qsystemd_process_source_file
 include_directories(${CMAKE_CURRENT_BINARY_DIR}) # find generated headers
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}) # for <libqsystemd_export.h>
 
@@ -28,7 +28,15 @@ qsystemd_add_dbus_interface(qsystemd_SRCS ${DBUS_PREFIX}/interfaces/org.freedesk
 
 qsystemd_process_source_file(qsystemd_SRCS automount systemd_automount_interface)
 qsystemd_process_source_file(qsystemd_SRCS device    systemd_device_interface)
+#qsystemd_process_source_file(qsystemd_SRCS job       systemd_job_interface)
+#qsystemd_process_source_file(qsystemd_SRCS mount     systemd_mount_interface)
+#qsystemd_process_source_file(qsystemd_SRCS path      systemd_path_interface)
+#qsystemd_process_source_file(qsystemd_SRCS service   systemd_service_interface)
+#qsystemd_process_source_file(qsystemd_SRCS snapshot  systemd_snapshot_interface)
+#qsystemd_process_source_file(qsystemd_SRCS socket    systemd_socket_interface)
+#qsystemd_process_source_file(qsystemd_SRCS swap      systemd_swap_interface)
 qsystemd_process_source_file(qsystemd_SRCS target    systemd_target_interface)
+#qsysfemd_process_source_file(qsystemd_SRCS timer     systemd_timer_interface)
 qsystemd_process_source_file(qsystemd_SRCS unit      systemd_unit_interface)
 
 add_library(qsystemd SHARED ${qsystemd_SRCS})
